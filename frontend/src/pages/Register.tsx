@@ -1,7 +1,8 @@
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
-import * as apiClient from '../api-client'
-
+import * as apiClient from "../api-client";
+import { useAppContext } from "../contexts/AppContext";
+import { useNavigate } from "react-router-dom";
 
 export type RegisterFormData = {
   firstName: string;
@@ -11,21 +12,24 @@ export type RegisterFormData = {
   confirmPassword: string;
 };
 const Register = () => {
-  const { register,
-     watch, 
-     handleSubmit,
-     formState:{errors}
-     } = useForm<RegisterFormData>();
+  const navigate=useNavigate();
+  const { showToast } = useAppContext();
+  const {
+    register,
+    watch,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterFormData>();
 
-     const mutation=useMutation(apiClient.register,{
-        onSuccess:()=>{
-            console.log("registration succesful!")
-        },
-        onError:(error:Error)=>
-        {
-            console.log(error.message);
-        }
-     });
+  const mutation = useMutation(apiClient.register, {
+    onSuccess: () => {
+      showToast({ message: "Registration Success!", type: "SUCCESS" });
+      navigate("/");
+    },
+    onError: (error: Error) => {
+      showToast({ message: error.message, type: "ERROR" });
+    },
+  });
 
   const onSubmit = handleSubmit((data) => {
     mutation.mutate(data);
@@ -43,9 +47,9 @@ const Register = () => {
           />
           {errors.firstName && (
             <span className="text-red-500">{errors.firstName.message}</span>
-        )}
+          )}
         </label>
-        
+
         <label className="text-gray-700 text-sm font-bold flex-1">
           Last Name
           <input
@@ -54,7 +58,7 @@ const Register = () => {
           />
           {errors.lastName && (
             <span className="text-red-500">{errors.lastName.message}</span>
-        )}
+          )}
         </label>
       </div>
       <label className="text-gray-700 text-sm font-bold flex-1">
@@ -65,7 +69,7 @@ const Register = () => {
           {...register("email", { required: "This fiels is required" })}
         />
         {errors.email && (
-            <span className="text-red-500">{errors.email.message}</span>
+          <span className="text-red-500">{errors.email.message}</span>
         )}
       </label>
 
@@ -83,7 +87,7 @@ const Register = () => {
           })}
         />
         {errors.password && (
-            <span className="text-red-500">{errors.password.message}</span>
+          <span className="text-red-500">{errors.password.message}</span>
         )}
       </label>
       <label className="text-gray-700 text-sm font-bold flex-1">
@@ -102,7 +106,7 @@ const Register = () => {
           })}
         />
         {errors.confirmPassword && (
-            <span className="text-red-500">{errors.confirmPassword.message}</span>
+          <span className="text-red-500">{errors.confirmPassword.message}</span>
         )}
       </label>
       <span>

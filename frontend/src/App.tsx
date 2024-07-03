@@ -28,6 +28,7 @@ import {
 } from "react-router-dom";
 import Layouts from "./layouts/Layouts"; // Assuming the correct file path and name
 import Register from "./pages/Register";
+import SignIn from "./pages/SignIn";
 
 const App = () => {
   return (
@@ -57,6 +58,9 @@ const App = () => {
             </Layouts>
           }
         />
+
+          <Route path="/sign-in" element={<Layouts> <SignIn/></Layouts>}/>
+
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
